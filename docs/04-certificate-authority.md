@@ -34,11 +34,11 @@ cat > ca-csr.json <<EOF
   },
   "names": [
     {
-      "C": "FR",
-      "L": "Rennes",
+      "C": "US",
+      "L": "New York",
       "O": "Kubernetes",
       "OU": "CA",
-      "ST": "Bretagne"
+      "ST": "NY"
     }
   ]
 }
@@ -72,11 +72,11 @@ cat > admin-csr.json <<EOF
   },
   "names": [
     {
-      "C": "FR",
-      "L": "Rennes",
+      "C": "US",
+      "L": "New York",
       "O": "system:masters",
       "OU": "Kubernetes The Hard Way",
-      "ST": "Bretagne"
+      "ST": "NY"
     }
   ]
 }
@@ -116,11 +116,11 @@ cat > worker-${id_instance}-csr.json <<EOF
   },
   "names": [
     {
-      "C": "FR",
-      "L": "Rennes",
+      "C": "US",
+      "L": "New York",
       "O": "system:nodes",
       "OU": "Kubernetes The Hard Way",
-      "ST": "Bretagne"
+      "ST": "NY"
     }
   ]
 }
@@ -163,11 +163,11 @@ cat > kube-controller-manager-csr.json <<EOF
   },
   "names": [
     {
-      "C": "FR",
-      "L": "Rennes",
+      "C": "US",
+      "L": "New York",
       "O": "system:kube-controller-manager",
       "OU": "Kubernetes The Hard Way",
-      "ST": "Bretagne"
+      "ST": "NY"
     }
   ]
 }
@@ -202,11 +202,11 @@ cat > kube-proxy-csr.json <<EOF
   },
   "names": [
     {
-      "C": "FR",
-      "L": "Rennes",
+      "C": "US",
+      "L": "New York",
       "O": "system:node-proxier",
       "OU": "Kubernetes The Hard Way",
-      "ST": "Bretagne"
+      "ST": "NY"
     }
   ]
 }
@@ -241,11 +241,11 @@ cat > kube-scheduler-csr.json <<EOF
   },
   "names": [
     {
-      "C": "FR",
-      "L": "Rennes",
+      "C": "US",
+      "L": "New York",
       "O": "system:kube-scheduler",
       "OU": "Kubernetes The Hard Way",
-      "ST": "Bretagne"
+      "ST": "NY"
     }
   ]
 }
@@ -286,11 +286,11 @@ cat > kubernetes-csr.json <<EOF
   },
   "names": [
     {
-      "C": "FR",
-      "L": "Rennes",
+      "C": "US",
+      "L": "New York",
       "O": "Kubernetes",
       "OU": "Kubernetes The Hard Way",
-      "ST": "Bretagne"
+      "ST": "NY"
     }
   ]
 }
@@ -330,11 +330,11 @@ cat > service-account-csr.json <<EOF
   },
   "names": [
     {
-      "C": "FR",
-      "L": "Rennes",
+      "C": "US",
+      "L": "New York",
       "O": "Kubernetes",
       "OU": "Kubernetes The Hard Way",
-      "ST": "Bretagne"
+      "ST": "NY"
     }
   ]
 }

@@ -32,7 +32,7 @@ ip route
 default via 192.168.8.1 dev ens18 proto static
 10.200.1.0/24 via 192.168.8.21 dev ens18
 10.200.2.0/24 via 192.168.8.22 dev ens18
-192.168.8.0/24 dev ens18 proto kernel scope link src 192.168.8.21
+192.168.8.0/24 dev ens18 proto kernel scope link src 192.168.8.20
 ```
 
 To make it persistent (if reboot), you need to edit your network configuration (depends on your Linux distribution).
@@ -51,7 +51,7 @@ network:
   ethernets:
     ens18:
       addresses:
-      - 192.168.8.10/24
+      - 192.168.8.20/24
       gateway4: 192.168.8.1
       nameservers:
         addresses:

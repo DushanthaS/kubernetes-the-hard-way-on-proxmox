@@ -7,7 +7,7 @@ In this lab you will deploy the [DNS add-on](https://kubernetes.io/docs/concepts
 Get the CoreDNS yaml:
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/DushanthaS/kubernetes-the-hard-way-on-proxmox/master/deployments/coredns.yaml
+kubectl apply -f https://raw.githubusercontent.com/chris-sanders-dot-org/kubernetes-the-hard-way-on-proxmox/master/deployments/coredns.yaml
 ```
 
 
