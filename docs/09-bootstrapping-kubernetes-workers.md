@@ -47,13 +47,13 @@ sudo swapoff -a
 
 ```bash
 wget -q --show-progress --https-only --timestamping \
-  https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.29.0/crictl-v1.29.0-linux-amd64.tar.gz \
-  https://github.com/opencontainers/runc/releases/download/v1.1.12/runc.amd64 \
-  https://github.com/containernetworking/plugins/releases/download/v1.4.0/cni-plugins-linux-amd64-v1.4.0.tgz \
-  https://github.com/containerd/containerd/releases/download/v1.7.13/containerd-1.7.13-linux-amd64.tar.gz \
-  https://storage.googleapis.com/kubernetes-release/release/v1.29.1/bin/linux/amd64/kubectl \
-  https://storage.googleapis.com/kubernetes-release/release/v1.29.1/bin/linux/amd64/kube-proxy \
-  https://storage.googleapis.com/kubernetes-release/release/v1.29.1/bin/linux/amd64/kubelet
+  https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.36.0/crictl-v1.36.0-linux-amd64.tar.gz \
+  https://github.com/opencontainers/runc/releases/download/v1.5.1/runc.amd64 \
+  https://github.com/containernetworking/plugins/releases/download/v1.9.1/cni-plugins-linux-amd64-v1.9.1.tgz \
+  https://github.com/containerd/containerd/releases/download/v2.3.4/containerd-2.3.4-linux-amd64.tar.gz \
+  https://dl.k8s.io/release/v1.36.3/bin/linux/amd64/kubectl \
+  https://dl.k8s.io/release/v1.36.3/bin/linux/amd64/kube-proxy \
+  https://dl.k8s.io/release/v1.36.3/bin/linux/amd64/kubelet
 ```
 
 Create the installation directories:
@@ -72,9 +72,9 @@ Install the worker binaries:
 
 ```bash
 mkdir containerd
-tar -xvf crictl-v1.29.0-linux-amd64.tar.gz
-tar -xvf containerd-1.7.13-linux-amd64.tar.gz -C containerd
-sudo tar -xvf cni-plugins-linux-amd64-v1.4.0.tgz -C /opt/cni/bin/
+tar -xvf crictl-v1.36.0-linux-amd64.tar.gz
+tar -xvf containerd-2.3.4-linux-amd64.tar.gz -C containerd
+sudo tar -xvf cni-plugins-linux-amd64-v1.9.1.tgz -C /opt/cni/bin/
 sudo mv runc.amd64 runc
 chmod +x crictl kubectl kube-proxy kubelet runc
 sudo mv crictl kubectl kube-proxy kubelet runc /usr/local/bin/
@@ -284,9 +284,9 @@ ssh root@controller-0 kubectl get nodes --kubeconfig admin.kubeconfig
 
 ```bash
 NAME       STATUS   ROLES    AGE   VERSION
-worker-0   Ready    <none>   15s   v1.29.1
-worker-1   Ready    <none>   15s   v1.29.1
-worker-2   Ready    <none>   15s   v1.29.1
+worker-0   Ready    <none>   15s   v1.36.3
+worker-1   Ready    <none>   15s   v1.36.3
+worker-2   Ready    <none>   15s   v1.36.3
 ```
 
 > [!NOTE]
