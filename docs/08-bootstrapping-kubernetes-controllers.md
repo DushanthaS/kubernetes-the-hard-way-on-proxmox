@@ -28,10 +28,10 @@ Download the official Kubernetes release binaries:
 
 ```bash
 wget -q --show-progress --https-only --timestamping \
-  "https://storage.googleapis.com/kubernetes-release/release/v1.29.1/bin/linux/amd64/kube-apiserver" \
-  "https://storage.googleapis.com/kubernetes-release/release/v1.29.1/bin/linux/amd64/kube-controller-manager" \
-  "https://storage.googleapis.com/kubernetes-release/release/v1.29.1/bin/linux/amd64/kube-scheduler" \
-  "https://storage.googleapis.com/kubernetes-release/release/v1.29.1/bin/linux/amd64/kubectl"
+  "https://dl.k8s.io/release/v1.36.3/bin/linux/amd64/kube-apiserver" \
+  "https://dl.k8s.io/release/v1.36.3/bin/linux/amd64/kube-controller-manager" \
+  "https://dl.k8s.io/release/v1.36.3/bin/linux/amd64/kube-scheduler" \
+  "https://dl.k8s.io/release/v1.36.3/bin/linux/amd64/kubectl"
 ```
 
 Install the Kubernetes binaries:
@@ -348,8 +348,8 @@ curl --cacert ca.pem https://${KUBERNETES_PUBLIC_ADDRESS}:6443/version
 ```bash
 {
   "major": "1",
-  "minor": "29",
-  "gitVersion": "v1.29.1",
+  "minor": "36",
+  "gitVersion": "v1.36.3",
   "gitCommit": "bc401b91f2782410b3fb3f9acf43a995c4de90d2",
   "gitTreeState": "clean",
   "buildDate": "2024-01-17T15:41:12Z",
