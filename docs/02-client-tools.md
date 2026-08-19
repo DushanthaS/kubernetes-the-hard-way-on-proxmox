@@ -9,8 +9,8 @@ The `cfssl` and `cfssljson` command line utilities will be used to provision a [
 On the **gateway-01** VM, download and install `cfssl` and `cfssljson`:
 
 ```bash
-  wget -q --show-progress --https-only --timestamping https://github.com/cloudflare/cfssl/releases/download/v1.6.4/cfssl_1.6.4_linux_amd64 -O cfssl
-  wget -q --show-progress --https-only --timestamping https://github.com/cloudflare/cfssl/releases/download/v1.6.4/cfssljson_1.6.4_linux_amd64  -O cfssljson
+  wget -q --show-progress --https-only --timestamping https://github.com/cloudflare/cfssl/releases/download/v1.6.5/cfssl_1.6.5_linux_amd64 -O cfssl
+  wget -q --show-progress --https-only --timestamping https://github.com/cloudflare/cfssl/releases/download/v1.6.5/cfssljson_1.6.5_linux_amd64  -O cfssljson
 ```
 
 ```bash
@@ -54,7 +54,7 @@ Runtime: go1.13
 The `kubectl` command line utility is used to interact with the Kubernetes API Server. On the **gateway-01** VM, download and install `kubectl` from the official release binaries:
 
 ```bash
-wget https://storage.googleapis.com/kubernetes-release/release/v1.29.1/bin/linux/amd64/kubectl
+wget https://dl.k8s.io/release/v1.36.3/bin/linux/amd64/kubectl
 ```
 
 ```bash
@@ -76,8 +76,8 @@ kubectl version --client
 > Output:
 
 ```bash
-Client Version: v1.29.1
-Kustomize Version: v5.0.4-0.20230601165947-6ce0bf390ce3
+Client Version: v1.36.3
+Kustomize Version: v5.8.1
 
 ```
 
