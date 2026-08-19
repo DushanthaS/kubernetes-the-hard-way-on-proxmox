@@ -132,11 +132,29 @@ Create the `containerd` configuration file:
 ```bash
 sudo mkdir -p /etc/containerd/
 ```
-Set up containerd configuration to enable systemd Cgroups
+Write the containerd configuration. The `runc` runtime must use systemd
+cgroups, because the kubelet is configured for the systemd cgroup driver later
+in this lab; if the two disagree, pods fail in ways that look like scheduling or
+networking faults rather than a cgroup mismatch.
 
 ```bash
- containerd config default | sed 's/SystemdCgroup = false/SystemdCgroup = true/' | sudo tee /etc/containerd/config.toml
+cat <<EOF | sudo tee /etc/containerd/config.toml
+version = 2
+
+[plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
+  runtime_type = "io.containerd.runc.v2"
+
+[plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]
+  SystemdCgroup = true
+  BinaryName = "/usr/local/bin/runc"
+EOF
 ```
+
+> Earlier versions of this guide generated the config with
+> `containerd config default | sed 's/SystemdCgroup = false/SystemdCgroup = true/'`.
+> Do not do that. containerd 2.x reorganised its plugin names, so the `sed` can
+> silently match nothing, leaving containerd on cgroupfs while the kubelet
+> expects systemd. Writing the setting explicitly removes that failure mode.
 
 Create the `containerd.service` systemd unit file:
 
