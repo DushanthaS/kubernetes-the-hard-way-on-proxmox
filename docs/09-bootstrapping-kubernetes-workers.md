@@ -314,9 +314,40 @@ worker-2   Ready    <none>   15s   v1.36.3
 
 ```bash
 sudo modprobe br_netfilter
-echo "br-netfilter" >> /etc/modules-load.d/modules.conf
-sysctl -w net.bridge.bridge-nf-call-iptables=1
 ```
+
+Load the module on every boot:
+
+```bash
+cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
+br_netfilter
+EOF
+```
+
+Set the sysctl on every boot. `sysctl -w` alone applies only to the running
+kernel, so without this file Service IP handling works now and breaks on the
+next reboot:
+
+```bash
+cat <<EOF | sudo tee /etc/sysctl.d/99-kubernetes.conf
+net.bridge.bridge-nf-call-iptables = 1
+EOF
+```
+
+Apply it without rebooting:
+
+```bash
+sudo sysctl --system
+```
+
+Verify:
+
+```bash
+lsmod | grep br_netfilter
+sysctl -n net.bridge.bridge-nf-call-iptables
+```
+
+> Output: a `br_netfilter` line, then `1`.
 
 
 Next: [Configuring kubectl for Remote Access](10-configuring-kubectl.md)
