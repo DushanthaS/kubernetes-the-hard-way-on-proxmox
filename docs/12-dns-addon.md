@@ -4,10 +4,41 @@ In this lab you will deploy the [DNS add-on](https://kubernetes.io/docs/concepts
 
 ## The DNS Cluster Add-on
 
-Get the CoreDNS yaml:
+The CoreDNS manifest lives in this repository, under `deployments/`. Set the
+ref you are following — a branch name or a tag:
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/DushanthaS/kubernetes-the-hard-way-on-proxmox/master/deployments/coredns.yaml
+COREDNS_REF=master
+```
+
+> If you are following a version-bump branch rather than `master`, set
+> `COREDNS_REF` to that branch. The manifest pins the CoreDNS image, so
+> fetching it from the wrong ref installs the wrong CoreDNS version without
+> reporting any error.
+
+Download the manifest:
+
+```bash
+wget -q --show-progress --https-only -O coredns.yaml \
+  "https://raw.githubusercontent.com/DushanthaS/kubernetes-the-hard-way-on-proxmox/${COREDNS_REF}/deployments/coredns.yaml"
+```
+
+Confirm you fetched the version you expect before applying it:
+
+```bash
+grep 'image:' coredns.yaml
+```
+
+> Output:
+
+```bash
+        image: coredns/coredns:1.14.2
+```
+
+Apply it:
+
+```bash
+kubectl apply -f coredns.yaml
 ```
 
 

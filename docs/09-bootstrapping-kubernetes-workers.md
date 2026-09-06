@@ -47,13 +47,13 @@ sudo swapoff -a
 
 ```bash
 wget -q --show-progress --https-only --timestamping \
-  https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.29.0/crictl-v1.29.0-linux-amd64.tar.gz \
-  https://github.com/opencontainers/runc/releases/download/v1.1.12/runc.amd64 \
-  https://github.com/containernetworking/plugins/releases/download/v1.4.0/cni-plugins-linux-amd64-v1.4.0.tgz \
-  https://github.com/containerd/containerd/releases/download/v1.7.13/containerd-1.7.13-linux-amd64.tar.gz \
-  https://storage.googleapis.com/kubernetes-release/release/v1.29.1/bin/linux/amd64/kubectl \
-  https://storage.googleapis.com/kubernetes-release/release/v1.29.1/bin/linux/amd64/kube-proxy \
-  https://storage.googleapis.com/kubernetes-release/release/v1.29.1/bin/linux/amd64/kubelet
+  https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.36.0/crictl-v1.36.0-linux-amd64.tar.gz \
+  https://github.com/opencontainers/runc/releases/download/v1.5.1/runc.amd64 \
+  https://github.com/containernetworking/plugins/releases/download/v1.9.1/cni-plugins-linux-amd64-v1.9.1.tgz \
+  https://github.com/containerd/containerd/releases/download/v2.3.4/containerd-2.3.4-linux-amd64.tar.gz \
+  https://dl.k8s.io/release/v1.36.3/bin/linux/amd64/kubectl \
+  https://dl.k8s.io/release/v1.36.3/bin/linux/amd64/kube-proxy \
+  https://dl.k8s.io/release/v1.36.3/bin/linux/amd64/kubelet
 ```
 
 Create the installation directories:
@@ -72,9 +72,9 @@ Install the worker binaries:
 
 ```bash
 mkdir containerd
-tar -xvf crictl-v1.29.0-linux-amd64.tar.gz
-tar -xvf containerd-1.7.13-linux-amd64.tar.gz -C containerd
-sudo tar -xvf cni-plugins-linux-amd64-v1.4.0.tgz -C /opt/cni/bin/
+tar -xvf crictl-v1.36.0-linux-amd64.tar.gz
+tar -xvf containerd-2.3.4-linux-amd64.tar.gz -C containerd
+sudo tar -xvf cni-plugins-linux-amd64-v1.9.1.tgz -C /opt/cni/bin/
 sudo mv runc.amd64 runc
 chmod +x crictl kubectl kube-proxy kubelet runc
 sudo mv crictl kubectl kube-proxy kubelet runc /usr/local/bin/
@@ -132,11 +132,29 @@ Create the `containerd` configuration file:
 ```bash
 sudo mkdir -p /etc/containerd/
 ```
-Set up containerd configuration to enable systemd Cgroups
+Write the containerd configuration. The `runc` runtime must use systemd
+cgroups, because the kubelet is configured for the systemd cgroup driver later
+in this lab; if the two disagree, pods fail in ways that look like scheduling or
+networking faults rather than a cgroup mismatch.
 
 ```bash
- containerd config default | sed 's/SystemdCgroup = false/SystemdCgroup = true/' | sudo tee /etc/containerd/config.toml
+cat <<EOF | sudo tee /etc/containerd/config.toml
+version = 2
+
+[plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
+  runtime_type = "io.containerd.runc.v2"
+
+[plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]
+  SystemdCgroup = true
+  BinaryName = "/usr/local/bin/runc"
+EOF
 ```
+
+> Earlier versions of this guide generated the config with
+> `containerd config default | sed 's/SystemdCgroup = false/SystemdCgroup = true/'`.
+> Do not do that. containerd 2.x reorganised its plugin names, so the `sed` can
+> silently match nothing, leaving containerd on cgroupfs while the kubelet
+> expects systemd. Writing the setting explicitly removes that failure mode.
 
 Create the `containerd.service` systemd unit file:
 
@@ -284,9 +302,9 @@ ssh root@controller-0 kubectl get nodes --kubeconfig admin.kubeconfig
 
 ```bash
 NAME       STATUS   ROLES    AGE   VERSION
-worker-0   Ready    <none>   15s   v1.29.1
-worker-1   Ready    <none>   15s   v1.29.1
-worker-2   Ready    <none>   15s   v1.29.1
+worker-0   Ready    <none>   15s   v1.36.3
+worker-1   Ready    <none>   15s   v1.36.3
+worker-2   Ready    <none>   15s   v1.36.3
 ```
 
 > [!NOTE]
@@ -296,9 +314,40 @@ worker-2   Ready    <none>   15s   v1.29.1
 
 ```bash
 sudo modprobe br_netfilter
-echo "br-netfilter" >> /etc/modules-load.d/modules.conf
-sysctl -w net.bridge.bridge-nf-call-iptables=1
 ```
+
+Load the module on every boot:
+
+```bash
+cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
+br_netfilter
+EOF
+```
+
+Set the sysctl on every boot. `sysctl -w` alone applies only to the running
+kernel, so without this file Service IP handling works now and breaks on the
+next reboot:
+
+```bash
+cat <<EOF | sudo tee /etc/sysctl.d/99-kubernetes.conf
+net.bridge.bridge-nf-call-iptables = 1
+EOF
+```
+
+Apply it without rebooting:
+
+```bash
+sudo sysctl --system
+```
+
+Verify:
+
+```bash
+lsmod | grep br_netfilter
+sysctl -n net.bridge.bridge-nf-call-iptables
+```
+
+> Output: a `br_netfilter` line, then `1`.
 
 
 Next: [Configuring kubectl for Remote Access](10-configuring-kubectl.md)

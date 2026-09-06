@@ -37,7 +37,7 @@ default via 192.168.8.1 dev ens18 proto static
 
 To make it persistent (if reboot), you need to edit your network configuration (depends on your Linux distribution).
 
-Example for **Ubuntu 18.04** and higher:
+Example for **Ubuntu 22.04** (netplan; applies to 18.04 and later):
 
 ```bash
 vi /etc/netplan/00-installer-config.yaml

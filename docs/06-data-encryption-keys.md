@@ -18,8 +18,8 @@ Create the `encryption-config.yaml` encryption config file:
 
 ```bash
 cat > encryption-config.yaml <<EOF
-kind: EncryptionConfig
-apiVersion: v1
+kind: EncryptionConfiguration
+apiVersion: apiserver.config.k8s.io/v1
 resources:
   - resources:
       - secrets

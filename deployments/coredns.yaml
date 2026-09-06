@@ -61,14 +61,18 @@ data:
   Corefile: |
     .:53 {
         errors
-        health
+        health {
+          lameduck 5s
+        }
         ready
         kubernetes cluster.local in-addr.arpa ip6.arpa {
           pods insecure
           fallthrough in-addr.arpa ip6.arpa
         }
         prometheus :9153
-        forward . /etc/resolv.conf
+        forward . /etc/resolv.conf {
+          max_concurrent 1000
+        }
         cache 30
         loop
         reload
@@ -104,9 +108,18 @@ spec:
           operator: "Exists"
       nodeSelector:
         kubernetes.io/os: linux
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: k8s-app
+                operator: In
+                values: ["kube-dns"]
+            topologyKey: kubernetes.io/hostname
       containers:
       - name: coredns
-        image: coredns/coredns:1.11.1
+        image: coredns/coredns:1.14.2
         imagePullPolicy: IfNotPresent
         resources:
           limits:
